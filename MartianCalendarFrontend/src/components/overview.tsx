@@ -7,20 +7,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { 
-  startOfWeek, 
-  addDays, 
-  format, 
-  startOfMonth, 
-  endOfMonth, 
-  isSameMonth, 
-  isSameDay, 
-  parseISO, 
-  isWithinInterval, 
-  addHours, 
-  setHours, 
-  setMinutes, 
-  setSeconds 
+import {
+  startOfWeek,
+  addDays,
+  format,
+  startOfMonth,
+  endOfMonth,
+  isSameMonth,
+  isSameDay,
+  parseISO,
+  isWithinInterval,
+  addHours,
+  setHours,
+  setMinutes,
+  setSeconds
 } from 'date-fns';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -126,9 +126,9 @@ export function Overview({ currentView, isMarsCal, currentDate, theme, events }:
             <TableRow>
               <TableHead className="w-[100px]" style={{ color: theme.text }} />
               {days.map((day) => (
-                <TableHead 
-                  key={day.toISOString()} 
-                  className="text-center" 
+                <TableHead
+                  key={day.toISOString()}
+                  className="text-center"
                   style={{ color: theme.text }}
                 >
                   <div className="font-normal text-xs">{format(day, 'EEE')}</div>
@@ -155,7 +155,7 @@ export function Overview({ currentView, isMarsCal, currentDate, theme, events }:
                       const eventEnd = parseISO(event.end)
                       return eventEnd > startOfHour && eventStart < endOfHour
                     })
-  
+
                     return (
                       <TableCell key={`${day.toISOString()}-${hour}`} className="h-24">
                         {slotEvents.map(renderEvent)}
@@ -200,9 +200,9 @@ export function Overview({ currentView, isMarsCal, currentDate, theme, events }:
           {weeks.map((week, weekIndex) => (
             <TableRow key={weekIndex}>
               {week.map((day) => {
-                const dayStart = setHours(setMinutes(setSeconds(day,0),0),0)  
+                const dayStart = setHours(setMinutes(setSeconds(day,0),0),0)
                 const dayEnd = addHours(dayStart,24)
-                
+
                 const dayEvents = events.filter((event) => {
                   const eventStart = parseISO(event.start)
                   const eventEnd = parseISO(event.end)
@@ -266,7 +266,7 @@ export function Overview({ currentView, isMarsCal, currentDate, theme, events }:
                         return <TableCell key={`${monthIndex}-day-${weekIndex * 7 + dayIndex}`} className="text-center p-1"></TableCell>
                       }
 
-                      const dayStart = setHours(setMinutes(setSeconds(day,0),0),0)  
+                      const dayStart = setHours(setMinutes(setSeconds(day,0),0),0)
                       const dayEnd = addHours(dayStart,24)
 
                       const dayEvents = events.filter((event) => {
@@ -311,13 +311,13 @@ export function Overview({ currentView, isMarsCal, currentDate, theme, events }:
       <h2 className="text-2xl font-bold mb-4">
         {currentView.charAt(0).toUpperCase() + currentView.slice(1)} View
       </h2>
-  
+
       {/* Conditional Rendering of Views */}
       {currentView === 'day' && renderDayView()}
       {currentView === 'week' && renderWeekView()}
       {currentView === 'month' && renderMonthView()}
       {currentView === 'year' && renderYearView()}
-  
+
       {/* Modal for Event Details */}
       {isModalOpen && selectedEvent && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -331,9 +331,9 @@ export function Overview({ currentView, isMarsCal, currentDate, theme, events }:
               End: {format(parseISO(selectedEvent.end), "PPpp")}
             </p>
             {/* Close Button using ShadCN */}
-            <Button 
+            <Button
               style={{ color: theme.text }}
-              onClick={handleCloseModal} 
+              onClick={handleCloseModal}
               className="mt-2"
             >
               Close

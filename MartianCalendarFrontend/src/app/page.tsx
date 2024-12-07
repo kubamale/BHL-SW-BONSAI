@@ -1,15 +1,15 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { CalendarDateRangePicker } from "@/components/date-range-picker"
-import { MainNav } from "@/components/main-nav"
-import { Overview } from "@/components/overview"
-import { Sidebar } from "@/components/sidebar"
-import { EventModal } from "@/components/event-modal"
-import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
-import { format, addDays, addMonths, addYears, subDays, subMonths, subYears } from 'date-fns'
+import {useEffect, useState} from 'react'
+import {CalendarDateRangePicker} from "@/components/date-range-picker"
+import {MainNav} from "@/components/main-nav"
+import {Overview} from "@/components/overview"
+import {Sidebar} from "@/components/sidebar"
+import {EventModal} from "@/components/event-modal"
+import {Button} from "@/components/ui/button"
+import {Switch} from "@/components/ui/switch"
+import {ChevronLeft, ChevronRight, Plus} from 'lucide-react'
+import {addDays, addMonths, addYears, format, subDays, subMonths, subYears} from 'date-fns'
 import Image from 'next/image'
 
 const earthTheme = {

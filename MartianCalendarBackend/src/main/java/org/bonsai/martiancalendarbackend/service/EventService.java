@@ -1,5 +1,6 @@
 package org.bonsai.martiancalendarbackend.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bonsai.martiancalendarbackend.dto.EventDto;
@@ -8,7 +9,6 @@ import org.bonsai.martiancalendarbackend.model.Event;
 import org.bonsai.martiancalendarbackend.repository.EventRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
@@ -24,20 +24,22 @@ public class EventService {
         event.setDescription(eventDto.getDescription());
         event.setStartTime(eventDto.getStart());
         event.setEndTime(eventDto.getEnd());
-        eventRepository.save(event);
-        log.error("Created event {}", event);
-        return eventDto;
-    }
-
-    public List<EventDto> getEventsForDay(OffsetDateTime date) {
-        return eventRepository.findAll().stream()
-                .filter(event -> !event.getStartTime().isAfter(date) && !event.getEndTime().isBefore(date))
-                .map(EventMapper::toDto)
-                .toList();
+        log.info("Created event {}", event);
+        return EventMapper.toDto(eventRepository.save(event));
     }
 
     public List<EventDto> getAllEvents() {
         return eventRepository.findAll().stream().map(EventMapper::toDto).toList();
     }
 
+    @Transactional
+    public EventDto editEvent(Long eventId, EventDto eventDto) {
+        Event event = eventRepository.findById(eventId).orElseThrow(IllegalArgumentException::new);
+        event.setTitle(eventDto.getTitle());
+        event.setDescription(eventDto.getDescription());
+        event.setStartTime(eventDto.getStart());
+        event.setEndTime(eventDto.getEnd());
+        log.info("Edited event {}", event);
+        return EventMapper.toDto(event);
+    }
 }
