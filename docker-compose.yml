@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  martian-events-db:
+    image: mysql
+    container_name: martian-events-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_PASSWORD: root_password
+      MYSQL_DATABASE: events_db
+    ports:
+      - "5432:3306"
+    volumes:
+      - martian-events-db-data:/var/lib/mysql
+
+volumes:
+  martian-events-db-data:
