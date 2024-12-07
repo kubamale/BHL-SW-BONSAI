@@ -32,9 +32,19 @@ export function EventModal({ isOpen, onClose, onSave, theme }: EventModalProps) 
   const [error, setError] = useState<string | null>(null); // Dodanie stanu dla błędów
 
   const handleSave = async () => {
-    setError(null); // Resetuj ewentualny poprzedni błąd
-    const eventData = { title, description, start, end };
-
+    setError(null); // Resetowanie ewentualnego poprzedniego błędu
+    
+    // Konwersja start i end na obiekty Date i następnie do formatu ISO 8601 z oznaczeniem strefy czasu
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+  
+    const eventData = { 
+      title, 
+      description, 
+      start: startDate.toISOString(), 
+      end: endDate.toISOString() 
+    };
+  
     try {
       const response = await fetch('http://localhost:8080/api/events', {
         method: 'POST',
@@ -43,7 +53,7 @@ export function EventModal({ isOpen, onClose, onSave, theme }: EventModalProps) 
         },
         body: JSON.stringify(eventData),
       });
-
+  
       if (response.ok) {
         console.log('Event saved successfully');
         onSave(eventData);

@@ -41,6 +41,24 @@ export default function CalendarPage() {
   const [isEventModalOpen, setIsEventModalOpen] = useState(false)
   const [events, setEvents] = useState<Event[]>([])
 
+  // Pobranie wydarzeń z backendu przy starcie
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/events')
+        if (response.ok) {
+          const data: Event[] = await response.json()
+          setEvents(data)
+        } else {
+          console.error('Failed to fetch events')
+        }
+      } catch (error) {
+        console.error('Error fetching events:', error)
+      }
+    }
+    fetchEvents()
+  }, [])
+
   useEffect(() => {
     setTheme(isMarsCal ? marsTheme : earthTheme)
   }, [isMarsCal])
@@ -186,4 +204,3 @@ export default function CalendarPage() {
     </div>
   )
 }
-
