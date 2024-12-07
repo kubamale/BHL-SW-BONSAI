@@ -15,6 +15,7 @@
 /MartianCalendarBackend/.sts4-cache
 
 ### IntelliJ IDEA ###
+.idea
 /MartianCalendarBackend/.idea
 /MartianCalendarBackend/*.iws
 /MartianCalendarBackend/*.iml
