@@ -1,0 +1,35 @@
+# Only apply rules within the MartianCalendarBackend directory
+/MartianCalendarBackend/HELP.md
+/MartianCalendarBackend/target/
+/MartianCalendarBackend/.mvn/wrapper/maven-wrapper.jar
+!/MartianCalendarBackend/**/src/main/**/target/
+/!MartianCalendarBackend/**/src/test/**/target/
+
+### STS ###
+/MartianCalendarBackend/.apt_generated
+/MartianCalendarBackend/.classpath
+/MartianCalendarBackend/.factorypath
+/MartianCalendarBackend/.project
+/MartianCalendarBackend/.settings
+/MartianCalendarBackend/.springBeans
+/MartianCalendarBackend/.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+/MartianCalendarBackend/.idea
+/MartianCalendarBackend/*.iws
+/MartianCalendarBackend/*.iml
+/MartianCalendarBackend/*.ipr
+
+### NetBeans ###
+/MartianCalendarBackend/nbproject/private/
+/MartianCalendarBackend/nbbuild/
+/MartianCalendarBackend/dist/
+/MartianCalendarBackend/nbdist/
+/MartianCalendarBackend/.nb-gradle/
+/MartianCalendarBackend/build/
+!/MartianCalendarBackend/**/src/main/**/build/
+/!MartianCalendarBackend/**/src/test/**/build/
+
+### VS Code ###
+/MartianCalendarBackend/.vscode/
