@@ -1,6 +1,7 @@
 package org.bonsai.martiancalendarbackend.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bonsai.martiancalendarbackend.dto.EventDto;
 import org.bonsai.martiancalendarbackend.mapper.EventMapper;
 import org.bonsai.martiancalendarbackend.model.Event;
@@ -11,6 +12,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class EventService {
 
@@ -23,6 +25,7 @@ public class EventService {
         event.setStartTime(eventDto.getStartTime());
         event.setEndTime(eventDto.getEndTime());
         eventRepository.save(event);
+        log.error("Created event {}", event);
         return eventDto;
     }
 

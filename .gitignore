@@ -33,3 +33,45 @@
 
 ### VS Code ###
 /MartianCalendarBackend/.vscode/
+
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/martiancalendarfrontend/node_modules
+/martiancalendarfrontend/.pnp
+/martiancalendarfrontend/.pnp.*
+/martiancalendarfrontend/.yarn/*
+/martiancalendarfrontend/!.yarn/patches
+/martiancalendarfrontend/!.yarn/plugins
+/martiancalendarfrontend/!.yarn/releases
+/martiancalendarfrontend/!.yarn/versions
+
+# testing
+/martiancalendarfrontend/coverage
+
+# next.js
+/martiancalendarfrontend/.next/
+/martiancalendarfrontend/out/
+
+# production
+/martiancalendarfrontend/build
+
+# misc
+/martiancalendarfrontend/.DS_Store
+/martiancalendarfrontend/*.pem
+
+# debug
+/martiancalendarfrontend/npm-debug.log*
+/martiancalendarfrontend/yarn-debug.log*
+/martiancalendarfrontend/yarn-error.log*
+
+# env files (can opt-in for committing if needed)
+/martiancalendarfrontend/.env*
+
+# vercel
+/martiancalendarfrontend/.vercel
+
+# typescript
+/martiancalendarfrontend/*.tsbuildinfo
+/martiancalendarfrontend/next-env.d.ts
