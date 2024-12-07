@@ -22,8 +22,8 @@ public class EventService {
         Event event = new Event();
         event.setTitle(eventDto.getTitle());
         event.setDescription(eventDto.getDescription());
-        event.setStartTime(eventDto.getStartTime());
-        event.setEndTime(eventDto.getEndTime());
+        event.setStartTime(eventDto.getStart());
+        event.setEndTime(eventDto.getEnd());
         eventRepository.save(event);
         log.error("Created event {}", event);
         return eventDto;

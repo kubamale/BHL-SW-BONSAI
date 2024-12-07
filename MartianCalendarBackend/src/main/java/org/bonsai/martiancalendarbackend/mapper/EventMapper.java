@@ -9,8 +9,8 @@ public class EventMapper {
         return EventDto.builder()
                 .title(event.getTitle())
                 .description(event.getDescription())
-                .startTime(event.getStartTime())
-                .endTime(event.getEndTime())
+                .start(event.getStartTime())
+                .end(event.getEndTime())
                 .build();
     }
 }

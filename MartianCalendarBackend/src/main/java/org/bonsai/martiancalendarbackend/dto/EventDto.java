@@ -10,6 +10,6 @@ import java.time.OffsetDateTime;
 public class EventDto {
     private String title;
     private String description;
-    private OffsetDateTime startTime;
-    private OffsetDateTime endTime;
+    private OffsetDateTime start;
+    private OffsetDateTime end;
 }
