@@ -2,9 +2,13 @@ package org.bonsai.martiancalendarbackend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.bonsai.martiancalendarbackend.dto.EventDto;
+import org.bonsai.martiancalendarbackend.mapper.EventMapper;
 import org.bonsai.martiancalendarbackend.model.Event;
 import org.bonsai.martiancalendarbackend.repository.EventRepository;
 import org.springframework.stereotype.Service;
+
+import java.time.OffsetDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,4 +25,12 @@ public class EventService {
         eventRepository.save(event);
         return eventDto;
     }
+
+    public List<EventDto> getEventsForDay(OffsetDateTime date) {
+        return eventRepository.findAll().stream()
+                .filter(event -> event.getStartTime().equals(date)) // Compare dates
+                .map(EventMapper::toDto) // Convert Event to EventDto
+                .toList(); // Collect the result into a List
+    }
+
 }
