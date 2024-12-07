@@ -29,4 +29,9 @@ public class EventController {
     public List<EventDto> getEventsForDay(@RequestParam OffsetDateTime date){
         return eventService.getEventsForDay(date);
     }
+
+    @GetMapping
+    public List<EventDto> getAllEvents() {
+        return eventService.getAllEvents();
+    }
 }

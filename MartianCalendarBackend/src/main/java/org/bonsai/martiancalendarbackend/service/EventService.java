@@ -36,4 +36,8 @@ public class EventService {
                 .toList();
     }
 
+    public List<EventDto> getAllEvents() {
+        return eventRepository.findAll().stream().map(EventMapper::toDto).toList();
+    }
+
 }
