@@ -9,7 +9,7 @@ import lombok.Setter;
 
 import java.time.OffsetDateTime;
 
-@Entity
+@Entity(name = "events")
 @Setter
 @Getter
 public class Event {
