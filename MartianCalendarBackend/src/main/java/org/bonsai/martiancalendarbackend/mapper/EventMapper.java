@@ -7,6 +7,7 @@ public class EventMapper {
 
     public static EventDto toDto(Event event){
         return EventDto.builder()
+                .id(event.getId())
                 .title(event.getTitle())
                 .description(event.getDescription())
                 .start(event.getStartTime())
