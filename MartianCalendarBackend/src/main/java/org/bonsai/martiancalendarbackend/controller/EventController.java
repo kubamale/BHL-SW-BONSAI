@@ -25,7 +25,7 @@ public class EventController {
         return eventService.createEvent(eventDto);
     }
 
-    @GetMapping
+    @GetMapping("/for_day")
     public List<EventDto> getEventsForDay(@RequestParam OffsetDateTime date){
         return eventService.getEventsForDay(date);
     }
