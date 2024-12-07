@@ -28,7 +28,7 @@ public class EventService {
 
     public List<EventDto> getEventsForDay(OffsetDateTime date) {
         return eventRepository.findAll().stream()
-                .filter(event -> event.getStartTime().equals(date))
+                .filter(event -> !event.getStartTime().isAfter(date) && !event.getEndTime().isBefore(date))
                 .map(EventMapper::toDto)
                 .toList();
     }
