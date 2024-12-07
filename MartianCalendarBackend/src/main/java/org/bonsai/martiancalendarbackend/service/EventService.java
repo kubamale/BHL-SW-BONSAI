@@ -8,7 +8,6 @@ import org.bonsai.martiancalendarbackend.model.Event;
 import org.bonsai.martiancalendarbackend.repository.EventRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
@@ -29,15 +28,7 @@ public class EventService {
         return eventDto;
     }
 
-    public List<EventDto> getEventsForDay(OffsetDateTime date) {
-        return eventRepository.findAll().stream()
-                .filter(event -> !event.getStartTime().isAfter(date) && !event.getEndTime().isBefore(date))
-                .map(EventMapper::toDto)
-                .toList();
-    }
-
     public List<EventDto> getAllEvents() {
         return eventRepository.findAll().stream().map(EventMapper::toDto).toList();
     }
-
 }

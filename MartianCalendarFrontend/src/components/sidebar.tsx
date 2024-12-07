@@ -1,7 +1,7 @@
-import { Calendar } from "@/components/ui/calendar"
-import { Card } from "@/components/ui/card"
-import { cn } from "@/lib/utils"
-import { format } from "date-fns"
+import {Calendar} from "@/components/ui/calendar"
+import {Card} from "@/components/ui/card"
+import {cn} from "@/lib/utils"
+import {format} from "date-fns"
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   isMarsCal: boolean;
