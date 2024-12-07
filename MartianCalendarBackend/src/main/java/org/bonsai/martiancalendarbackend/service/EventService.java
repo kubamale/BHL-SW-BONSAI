@@ -42,4 +42,8 @@ public class EventService {
         log.info("Edited event {}", event);
         return EventMapper.toDto(event);
     }
+
+    public void deleteEvent(Long eventId) {
+        eventRepository.deleteById(eventId);
+    }
 }
