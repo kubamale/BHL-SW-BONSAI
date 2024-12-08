@@ -11,6 +11,9 @@ import {Switch} from "@/components/ui/switch"
 import {ChevronLeft, ChevronRight, Plus} from 'lucide-react'
 import {addDays, addMonths, addYears, format, subDays, subMonths, subYears} from 'date-fns'
 import Image from 'next/image'
+import OverviewMars from "@/components/overview-mars";
+import {DarianMonth} from "@/app/models/darian-months";
+import {MartianDate, MartianEvent} from "@/app/models/martian-event";
 
 const earthTheme = {
   primary: "hsl(210, 20%, 50%)", // Soft blue-gray
@@ -41,6 +44,9 @@ export default function CalendarPage() {
   const [theme, setTheme] = useState(earthTheme)
   const [isEventModalOpen, setIsEventModalOpen] = useState(false)
   const [events, setEvents] = useState<Event[]>([])
+  const [martianEvents, setMartianEvents] = useState<MartianEvent[]>([])
+  const [marsTime, setMarsTime] = useState<MartianDate>()
+
 
   // Pobranie wydarzeń z backendu przy starcie
   useEffect(() => {
@@ -57,7 +63,33 @@ export default function CalendarPage() {
         console.error('Error fetching events:', error)
       }
     }
+    const fetchMartianEvents = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/events/martian')
+        if (response.ok) {
+          const data: MartianEvent[] = await response.json()
+          setMartianEvents(data)
+
+        } else {
+          console.error('Failed to fetch events')
+        }
+      } catch (error) {
+        console.error('Error fetching events:', error)
+      }
+    }
+    const nowToMartian= async () => {
+      const now = new Date();
+      const response = await fetch("http://localhost:8080/api/conversions/toMartian", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(now.toISOString()),
+      });
+      const d : MartianDate = await response.json();
+      setMarsTime(d);
+    }
+    nowToMartian();
     fetchEvents()
+    fetchMartianEvents()
   }, [])
 
   useEffect(() => {
@@ -185,22 +217,24 @@ export default function CalendarPage() {
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">{isMarsCal ? 'Mars' : 'Earth'} Calendar</h2>
         </div>
+
         <div className="flex space-x-4">
-          <Sidebar 
-            className="hidden lg:block" 
-            isMarsCal={isMarsCal} 
+          <Sidebar
+            className="hidden lg:block"
+            isMarsCal={isMarsCal}
             currentDate={currentDate}
             setCurrentDate={setCurrentDate}
             theme={theme}
             events={events}
           />
-          <Overview 
-            currentView={currentView} 
-            isMarsCal={isMarsCal} 
-            currentDate={currentDate} 
-            theme={theme}
-            events={events}
-          />
+          {isMarsCal ? <OverviewMars year={marsTime!.year} month={Object.values(DarianMonth).at(marsTime!.monthNumber+1) as DarianMonth} currentView={currentView} events={martianEvents}/>: <Overview
+              currentView={currentView}
+              isMarsCal={isMarsCal}
+              currentDate={currentDate}
+              theme={theme}
+              events={events}
+          />}
+
         </div>
       </div>
       <EventModal 

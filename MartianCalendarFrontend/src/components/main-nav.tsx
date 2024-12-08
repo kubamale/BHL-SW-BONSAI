@@ -38,7 +38,7 @@ export function MainNav({
     };
 
     const updateMarsTime = async () => {
-      console.log("updateMarsTime called");
+      //console.log("updateMarsTime called");
       try {
         const now = new Date();
         const response = await fetch("http://localhost:8080/api/conversions/toMartian", {
@@ -48,13 +48,13 @@ export function MainNav({
         });
 
         if (!response.ok) {
-          console.error("Failed to fetch Mars time, status:", response.status);
+         // console.error("Failed to fetch Mars time, status:", response.status);
           setMarsTime("Error fetching Mars time");
           return;
         }
 
         const marsData = await response.json();
-        console.log("Mars data received:", marsData);
+        // console.log("Mars data received:", marsData);
 
         const formattedMarsTime = ` ${marsData.day} ${marsData.month} ${marsData.year}, ` +
           `${String(marsData.hour).padStart(2, '0')}:${String(marsData.minute).padStart(2, '0')}:${String(marsData.second).padStart(2, '0')}`;
@@ -74,7 +74,7 @@ export function MainNav({
     }
 
     const intervalId = setInterval(() => {
-      console.log("Interval triggered, isMarsCal:", isMarsCal);
+     // console.log("Interval triggered, isMarsCal:", isMarsCal);
       if (isMarsCal) {
         updateMarsTime();
       } else {

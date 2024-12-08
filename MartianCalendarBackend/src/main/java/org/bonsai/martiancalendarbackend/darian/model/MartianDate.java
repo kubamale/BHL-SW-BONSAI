@@ -23,6 +23,6 @@ public class MartianDate {
     private int second;
 
     public int getMonthNumber() {
-        return this.month.ordinal();
+        return month.ordinal();
     }
 }
