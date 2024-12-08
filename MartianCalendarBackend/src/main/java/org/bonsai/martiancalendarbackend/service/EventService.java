@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bonsai.martiancalendarbackend.dto.EventDto;
+import org.bonsai.martiancalendarbackend.dto.MartianEventDto;
 import org.bonsai.martiancalendarbackend.mapper.EventMapper;
 import org.bonsai.martiancalendarbackend.model.Event;
 import org.bonsai.martiancalendarbackend.repository.EventRepository;
@@ -45,5 +46,11 @@ public class EventService {
 
     public void deleteEvent(Long eventId) {
         eventRepository.deleteById(eventId);
+    }
+
+    public List<MartianEventDto> getMartianEvents() {
+        return eventRepository.findAll().stream()
+                .map(EventMapper::toMartianDto)
+                .toList();
     }
 }

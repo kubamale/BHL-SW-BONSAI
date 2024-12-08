@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Setter
@@ -22,7 +22,7 @@ public class Event {
 
     private String description;
 
-    private OffsetDateTime startTime;
+    private ZonedDateTime startTime;
 
-    private OffsetDateTime endTime;
+    private ZonedDateTime endTime;
 }
