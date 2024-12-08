@@ -13,7 +13,7 @@ import {addDays, addMonths, addYears, format, subDays, subMonths, subYears} from
 import Image from 'next/image'
 
 const earthTheme = {
-a  primary: "hsl(210, 20%, 50%)",
+  primary: "hsl(210, 20%, 50%)",
   secondary: "hsl(180, 15%, 70%)",
   background: "hsl(0, 0%, 98%)",
   text: "hsl(210, 20%, 25%)",
