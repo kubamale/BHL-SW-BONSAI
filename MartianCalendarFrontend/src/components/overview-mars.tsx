@@ -29,62 +29,70 @@ export default function OverviewMars({
     } else if (currentView == 'day') {
         <p>day</p>
     } else if (currentView == 'year') {
-        return renderYearView(month, year);
+        return renderYearView(month, year, events);
     }
 }
 
 
+// overview-mars.tsx - update the renderMonthView function
 function renderMonthView(month: number, year: number, events: MartianEvent[]) {
     const daysNames = ["So", "Lu", "Ma", "Me", "Jo", "Ve", "Sa"];
     let startday = 1;
-    console.log("Kuba malewicz")
-    console.log(events);
+    
+    const hasEventOnDay = (day: number) => {
+        return events.some(event => 
+            event.startMartianDate.day <= day && 
+            event.endMartianDate.day >= day &&
+            event.startMartianDate.monthNumber === month
+        );
+    };
+
     return (
         <div className="overview-mars">
             <h2>{Object.values(DarianMonth).at(month)}</h2>
             <table>
                 <thead className='header'>
-                {daysNames.map((day: string, index: number) => (
-                    <th key={index}>{day}</th>
-                ))}
+                    {daysNames.map((day: string, index: number) => (
+                        <th key={index}>{day}</th>
+                    ))}
                 </thead>
                 <tbody>
-                <tr className='row'>{daysNames.map((day: string, index: number) => (
-                    <td key={index}><DayTile dayNumber={startday++}/></td>
-                ))}</tr>
-                <tr className='row'>{daysNames.map((day: string, index: number) => (
-                    <td key={index}><DayTile dayNumber={startday++}/></td>
-                ))}</tr>
-                <tr className='row'>{daysNames.map((day: string, index: number) => (
-                    <td key={index}><DayTile dayNumber={startday++}/></td>
-                ))}</tr>
-                <tr className='row'>{daysNames.map((day: string, index: number) => {
-                        if (startday < 28) {
-                            return (<td key={index}><DayTile dayNumber={startday++}/></td>);
-                        }
-
-                        if (startday == 28 && month + 1 == 24 && isLeapYear(year)) {
-                            return (<td key={index}><DayTile dayNumber={startday++}/></td>);
-                        }
-                    }
-                )}</tr>
+                    {[0, 1, 2, 3].map((row) => (
+                        <tr key={row} className='row'>
+                            {daysNames.map((day: string, index: number) => {
+                                const currentDay = row * 7 + index + 1;
+                                if (currentDay <= 28 || (currentDay === 28 && month + 1 === 24 && isLeapYear(year))) {
+                                    return (
+                                        <td key={index}>
+                                            <DayTile 
+                                                dayNumber={currentDay} 
+                                                hasEvent={hasEventOnDay(currentDay)}
+                                            />
+                                        </td>
+                                    );
+                                }
+                                return null;
+                            })}
+                        </tr>
+                    ))}
                 </tbody>
-
             </table>
         </div>
-
-
     );
 }
 
-function renderYearView(month: DarianMonth, year: number) {
+// overview-mars.tsx - update the renderYearView function
+function renderYearView(month: DarianMonth, year: number, events: MartianEvent[]) {
     return (
         <div className="year-container">
-            {Object.values(DarianMonth).filter((v) => (isNaN(Number(v)))).map((value, index) =>
-                <div key={index} className="calendar-container">
-                    {renderMonthView(index, year, [])}
-                </div>
-            )}
+            {Object.values(DarianMonth).filter((v) => (isNaN(Number(v)))).map((value, index) => {
+                const monthEvents = events.filter((e) => e.startMartianDate.monthNumber === index);
+                return (
+                    <div key={index} className="calendar-container">
+                        {renderMonthView(index, year, monthEvents)}
+                    </div>
+                );
+            })}
         </div>
-    )
+    );
 }

@@ -1,11 +1,12 @@
 import './day.css'
 
-export function DayTile({dayNumber}:{
-    dayNumber:number,
+export function DayTile({dayNumber, hasEvent = false}: {
+    dayNumber: number,
+    hasEvent?: boolean
 }) {
-    return(
+    return (
         <div>
-            <h3 className="day-text has-event">{dayNumber}</h3>
+            <h3 className={`day-text ${hasEvent ? 'has-event' : ''}`}>{dayNumber}</h3>
         </div>
     )
 }
