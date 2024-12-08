@@ -13,17 +13,17 @@ import {addDays, addMonths, addYears, format, subDays, subMonths, subYears} from
 import Image from 'next/image'
 
 const earthTheme = {
-  primary: "hsl(210, 20%, 50%)", // Soft blue-gray
-  secondary: "hsl(180, 15%, 70%)", // Light teal
-  background: "hsl(0, 0%, 98%)", // Off-white
-  text: "hsl(210, 20%, 25%)", // Dark blue-gray
+a  primary: "hsl(210, 20%, 50%)",
+  secondary: "hsl(180, 15%, 70%)",
+  background: "hsl(0, 0%, 98%)",
+  text: "hsl(210, 20%, 25%)",
 }
 
 const marsTheme = {
-  primary: "hsl(15, 40%, 50%)", // Muted rust
-  secondary: "hsl(30, 30%, 60%)", // Soft orange
-  background: "hsl(15, 25%, 95%)", // Very light rust
-  text: "hsl(15, 40%, 25%)", // Dark rust
+  primary: "hsl(15, 40%, 50%)",
+  secondary: "hsl(30, 30%, 60%)",
+  background: "hsl(15, 25%, 95%)",
+  text: "hsl(15, 40%, 25%)",
 }
 
 interface Event {
@@ -41,7 +41,9 @@ export default function CalendarPage() {
   const [isEventModalOpen, setIsEventModalOpen] = useState(false)
   const [events, setEvents] = useState<Event[]>([])
 
-  // Pobranie wydarzeń z backendu przy starcie
+  const [currentTime, setCurrentTime] = useState("");
+  const [marsTime, setMarsTime] = useState("");
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -63,12 +65,55 @@ export default function CalendarPage() {
     setTheme(isMarsCal ? marsTheme : earthTheme)
   }, [isMarsCal])
 
+  useEffect(() => {
+    const updateEarthTime = () => {
+      const now = new Date();
+      setCurrentTime(now.toLocaleString());
+    };
+
+    const updateMarsTime = async () => {
+      try {
+        const now = new Date();
+        const response = await fetch("http://localhost:8080/api/conversions/toMartian", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(now.toISOString()),
+        });
+
+        if (!response.ok) {
+          console.error("Failed to fetch Mars time, status:", response.status);
+          setMarsTime("Error fetching Mars time");
+          return;
+        }
+
+        const marsData = await response.json();
+        const formattedMarsTime = ` ${marsData.day} ${marsData.month} ${marsData.year}, ` +
+          `${String(marsData.hour).padStart(2, '0')}:${String(marsData.minute).padStart(2, '0')}:${String(marsData.second).padStart(2, '0')}`;
+
+        setMarsTime(formattedMarsTime);
+      } catch (error) {
+        console.error("Error fetching Mars time:", error);
+        setMarsTime("Error fetching Mars time");
+      }
+    };
+
+    // Aktualizacja natychmiastowa
+    updateEarthTime();
+    updateMarsTime();
+
+    const intervalId = setInterval(() => {
+      updateEarthTime();
+      updateMarsTime();
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   const formatCurrentState = () => {
     switch (currentView) {
       case 'day':
         return format(currentDate, 'MMMM d, yyyy')
       case 'week':
-        const weekEnd = addDays(currentDate, 6)
         return `${format(currentDate, 'MMMM yyyy')}`
       case 'month':
         return format(currentDate, 'MMMM yyyy')
@@ -116,7 +161,8 @@ export default function CalendarPage() {
       color: theme.text
     } as React.CSSProperties}>
       <div className="border-b" style={{ borderColor: theme.secondary }}>
-        <div className="flex h-16 items-center px-4">
+        <div className="flex h-16 items-center px-4 justify-between">
+          {/* Lewa część nagłówka */}
           <div className="flex items-center space-x-4">
             <Button 
               variant="outline" 
@@ -135,16 +181,23 @@ export default function CalendarPage() {
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
+
+            {/* Przyciski widoków (day/week/month/year) po lewej od switcha */}
+            <MainNav
+              className=""
+              currentView={currentView}
+              setCurrentView={setCurrentView}
+              theme={theme}
+              isMarsCal={isMarsCal}
+            />
           </div>
-          <MainNav
-  className="mx-6"
-  currentView={currentView}
-  setCurrentView={setCurrentView}
-  theme={theme}
-  isMarsCal={isMarsCal} // Pass the state here
-/>
-          <div className="ml-auto flex items-center space-x-4">
-            <CalendarDateRangePicker theme={theme} onDateChange={handleDateChange} />
+
+          {/* Środek: Earth time, Earth, Switch, Mars, Mars time */}
+          <div className="flex items-center space-x-4">
+            <div className="text-sm font-medium" style={{ color: theme.text }}>
+              {currentTime}
+            </div>
+
             <div className="flex items-center space-x-2">
               <div className="relative w-10 h-10">
                 <Image
@@ -177,6 +230,15 @@ export default function CalendarPage() {
                 />
               </div>
             </div>
+
+            <div className="text-sm font-medium" style={{ color: theme.text }}>
+              {marsTime}
+            </div>
+          </div>
+
+          {/* Prawa część nagłówka */}
+          <div className="flex items-center space-x-4">
+            <CalendarDateRangePicker theme={theme} onDateChange={handleDateChange} />
           </div>
         </div>
       </div>
