@@ -10,6 +10,7 @@ public class EventMapper {
                 .id(event.getId())
                 .title(event.getTitle())
                 .description(event.getDescription())
+                .category(event.getCategory())
                 .start(event.getStartTime())
                 .end(event.getEndTime())
                 .build();

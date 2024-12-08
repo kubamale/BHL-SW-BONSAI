@@ -11,6 +11,7 @@ public class EventDto {
     private Long id;
     private String title;
     private String description;
+    private String category;
     private OffsetDateTime start;
     private OffsetDateTime end;
 }

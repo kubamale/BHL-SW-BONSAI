@@ -22,6 +22,8 @@ public class Event {
 
     private String description;
 
+    private String category;
+
     private OffsetDateTime startTime;
 
     private OffsetDateTime endTime;

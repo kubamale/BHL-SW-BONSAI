@@ -22,6 +22,7 @@ public class EventService {
         Event event = new Event();
         event.setTitle(eventDto.getTitle());
         event.setDescription(eventDto.getDescription());
+        event.setCategory(eventDto.getCategory());
         event.setStartTime(eventDto.getStart());
         event.setEndTime(eventDto.getEnd());
         log.info("Created event {}", event);
@@ -37,6 +38,7 @@ public class EventService {
         Event event = eventRepository.findById(eventId).orElseThrow(IllegalArgumentException::new);
         event.setTitle(eventDto.getTitle());
         event.setDescription(eventDto.getDescription());
+        event.setCategory(eventDto.getCategory());
         event.setStartTime(eventDto.getStart());
         event.setEndTime(eventDto.getEnd());
         log.info("Edited event {}", event);
