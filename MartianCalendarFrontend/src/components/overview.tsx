@@ -1,5 +1,12 @@
-import React, {useState} from 'react'
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
+import React, { useState, useEffect } from 'react'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import {
     addDays,
     addHours,
@@ -38,9 +45,30 @@ interface OverviewProps {
   events: Event[];
 }
 
-export function Overview({ currentView, isMarsCal, currentDate, theme, events }: OverviewProps) {
+export function Overview({ currentView, isMarsCal, currentDate, theme, events: initialEvents }: OverviewProps) {
+  const [events, setEvents] = useState<Event[]>(initialEvents); // State for events
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  // Fetch events from the backend
+  const fetchEvents = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/events'); // Update this to your API endpoint
+      if (response.ok) {
+        const fetchedEvents = await response.json();
+        setEvents(fetchedEvents); // Update events in state
+      } else {
+        console.error(`Failed to fetch events: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
+  };
+
+  // Use `useEffect` to fetch events on component mount
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
   const handleEventClick = (event: Event) => {
     setSelectedEvent(event)
@@ -51,6 +79,34 @@ export function Overview({ currentView, isMarsCal, currentDate, theme, events }:
     setSelectedEvent(null)
     setIsModalOpen(false)
   }
+
+  const handleDeleteEvent = async () => {
+    if (selectedEvent) {
+      try {
+        // Send DELETE request to the backend
+        const response = await fetch(`http://localhost:8080/api/events/${selectedEvent.id}`, {
+          method: 'DELETE',
+        });
+
+        if (response.ok) {
+          // Re-fetch events from the backend to update the calendar
+          await fetchEvents();
+          // Close the modal after deleting
+          setSelectedEvent(null);
+          setIsModalOpen(false);
+        } else {
+          const errorText = await response.text();
+          console.error(`Failed to delete event: ${errorText}`);
+        }
+      } catch (error) {
+        console.error('An error occurred while deleting the event:', error);
+      }
+    }
+  };
+
+
+
+
 
   const renderEvent = (event: Event) => (
     <div 
@@ -314,7 +370,7 @@ export function Overview({ currentView, isMarsCal, currentDate, theme, events }:
       {/* Modal for Event Details */}
       {isModalOpen && selectedEvent && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white text-black p-4 rounded shadow-md w-64">
+          <div className="bg-white text-black p-4 rounded shadow-md w-64 relative">
             <h3 className="font-bold text-lg mb-2">{selectedEvent.title}</h3>
             <p className="text-sm mb-2">{selectedEvent.description}</p>
             <p className="text-xs mb-1">
@@ -323,14 +379,26 @@ export function Overview({ currentView, isMarsCal, currentDate, theme, events }:
             <p className="text-xs mb-2">
               End: {format(parseISO(selectedEvent.end), "PPpp")}
             </p>
-            {/* Close Button using ShadCN */}
-            <Button
-              style={{ color: theme.text }}
-              onClick={handleCloseModal}
-              className="mt-2"
-            >
-              Close
-            </Button>
+
+            {/* Button container with flex layout */}
+            <div className="flex justify-between mt-4">
+              {/* Close Button */}
+              <Button
+                style={{ color: theme.text }}
+                onClick={handleCloseModal}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                Close
+              </Button>
+
+              {/* Delete Button */}
+              <Button
+                onClick={handleDeleteEvent}
+                className="text-red-500 hover:text-red-700"
+              >
+                Delete
+              </Button>
+            </div>
           </div>
         </div>
       )}
