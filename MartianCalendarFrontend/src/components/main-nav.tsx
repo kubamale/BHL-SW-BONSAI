@@ -1,8 +1,8 @@
 'use client'
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import {cn} from "@/lib/utils";
+import {Button} from "@/components/ui/button";
+import {useEffect, useState} from "react";
 
 interface MainNavProps extends React.HTMLAttributes<HTMLElement> {
   currentView: string;
