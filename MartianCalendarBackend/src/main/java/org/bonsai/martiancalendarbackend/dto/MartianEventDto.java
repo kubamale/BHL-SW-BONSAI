@@ -2,16 +2,14 @@ package org.bonsai.martiancalendarbackend.dto;
 
 import lombok.Builder;
 import lombok.Data;
-
-import java.time.ZonedDateTime;
+import org.bonsai.martiancalendarbackend.darian.model.MartianDate;
 
 @Data
 @Builder
-public class EventDto {
+public class MartianEventDto {
     private Long id;
     private String title;
     private String description;
-    private String category;
-    private ZonedDateTime start;
-    private ZonedDateTime end;
+    private MartianDate startMartianDate;
+    private MartianDate endMartianDate;
 }

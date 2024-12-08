@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bonsai.martiancalendarbackend.dto.EventDto;
+import org.bonsai.martiancalendarbackend.dto.MartianEventDto;
 import org.bonsai.martiancalendarbackend.mapper.EventMapper;
 import org.bonsai.martiancalendarbackend.model.Event;
 import org.bonsai.martiancalendarbackend.repository.EventRepository;
@@ -22,6 +23,7 @@ public class EventService {
         Event event = new Event();
         event.setTitle(eventDto.getTitle());
         event.setDescription(eventDto.getDescription());
+        event.setCategory(eventDto.getCategory());
         event.setStartTime(eventDto.getStart());
         event.setEndTime(eventDto.getEnd());
         log.info("Created event {}", event);
@@ -37,6 +39,7 @@ public class EventService {
         Event event = eventRepository.findById(eventId).orElseThrow(IllegalArgumentException::new);
         event.setTitle(eventDto.getTitle());
         event.setDescription(eventDto.getDescription());
+        event.setCategory(eventDto.getCategory());
         event.setStartTime(eventDto.getStart());
         event.setEndTime(eventDto.getEnd());
         log.info("Edited event {}", event);
@@ -45,5 +48,11 @@ public class EventService {
 
     public void deleteEvent(Long eventId) {
         eventRepository.deleteById(eventId);
+    }
+
+    public List<MartianEventDto> getMartianEvents() {
+        return eventRepository.findAll().stream()
+                .map(EventMapper::toMartianDto)
+                .toList();
     }
 }
