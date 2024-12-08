@@ -1,5 +1,3 @@
-Based on the codebase, I'll generate a technical documentation for the AstroBridge project:
-
 # AstroBridge - Technical Documentation
 
 ## Overview
@@ -150,3 +148,9 @@ void convertLocalDateTimeToDarianYear() {
     assertEquals(dateTime, convertedDate);
 }
 ```
+
+## Authors
+- Aleksander Gajowniczek
+- Błażej Laskus
+- Tomasz Lewiński
+- Jakub Malewicz
