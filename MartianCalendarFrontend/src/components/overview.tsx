@@ -26,6 +26,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 interface Event {
+  id: number;
   title: string;
   description: string;
   start: string;

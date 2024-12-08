@@ -27,6 +27,7 @@ const marsTheme = {
 }
 
 interface Event {
+  id: number;
   title: string;
   description: string;
   start: string;
@@ -191,6 +192,7 @@ export default function CalendarPage() {
             currentDate={currentDate}
             setCurrentDate={setCurrentDate}
             theme={theme}
+            events={events}
           />
           <Overview 
             currentView={currentView} 
