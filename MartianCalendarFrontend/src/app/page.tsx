@@ -27,6 +27,7 @@ const marsTheme = {
 }
 
 interface Event {
+  id: number;
   title: string;
   description: string;
   start: string;
@@ -136,7 +137,13 @@ export default function CalendarPage() {
               </Button>
             </div>
           </div>
-          <MainNav className="mx-6" currentView={currentView} setCurrentView={setCurrentView} theme={theme} />
+          <MainNav
+  className="mx-6"
+  currentView={currentView}
+  setCurrentView={setCurrentView}
+  theme={theme}
+  isMarsCal={isMarsCal} // Pass the state here
+/>
           <div className="ml-auto flex items-center space-x-4">
             <CalendarDateRangePicker theme={theme} onDateChange={handleDateChange} />
             <div className="flex items-center space-x-2">
@@ -185,6 +192,7 @@ export default function CalendarPage() {
             currentDate={currentDate}
             setCurrentDate={setCurrentDate}
             theme={theme}
+            events={events}
           />
           <Overview 
             currentView={currentView} 

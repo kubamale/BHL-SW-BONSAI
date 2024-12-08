@@ -1,31 +1,24 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import {
-  startOfWeek,
-  addDays,
-  format,
-  startOfMonth,
-  endOfMonth,
-  isSameMonth,
-  isSameDay,
-  parseISO,
-  isWithinInterval,
-  addHours,
-  setHours,
-  setMinutes,
-  setSeconds
+    addDays,
+    addHours,
+    endOfMonth,
+    format,
+    isSameDay,
+    isSameMonth,
+    parseISO,
+    setHours,
+    setMinutes,
+    setSeconds,
+    startOfMonth,
+    startOfWeek
 } from 'date-fns';
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import {cn} from "@/lib/utils";
+import {Button} from "@/components/ui/button";
 
 interface Event {
+  id: number;
   title: string;
   description: string;
   start: string;
