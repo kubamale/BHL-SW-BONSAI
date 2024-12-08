@@ -1,4 +1,3 @@
-import { Calendar } from "@/components/ui/calendar";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { format, isAfter } from "date-fns";
@@ -12,25 +11,17 @@ interface Event {
 }
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
-  isMarsCal: boolean;
-  currentDate: Date;
-  setCurrentDate: (date: Date) => void;
   theme: {
     primary: string;
     secondary: string;
     background: string;
     text: string;
   };
+  currentDate: Date;
   events: Event[];
 }
 
-export function Sidebar({ className, isMarsCal, currentDate, setCurrentDate, theme, events }: SidebarProps) {
-  const handleSelect = (date: Date | undefined) => {
-    if (date) {
-      setCurrentDate(date);
-    }
-  };
-
+export function Sidebar({ className, currentDate, theme, events }: SidebarProps) {
   // Filter and sort upcoming events
   const upcomingEvents = events
     .filter((event) => isAfter(new Date(event.start), currentDate)) // Only events after the current date
@@ -47,40 +38,28 @@ export function Sidebar({ className, isMarsCal, currentDate, setCurrentDate, the
       }}
     >
       <div className="space-y-4">
-        <div className="flex items-center justify-between"></div>
-        <Calendar
-          mode="single"
-          selected={currentDate}
-          onSelect={handleSelect}
-          className="rounded-md border"
-          styles={{
-            day_selected: { backgroundColor: theme.primary, color: theme.background },
-            day_today: { color: theme.primary },
-          }}
-        />
-        <div className="space-y-4">
-          <div className="text-sm font-medium">Upcoming Events</div>
-          <div className="grid gap-4">
-            {upcomingEvents.length > 0 ? (
-              upcomingEvents.map((event, index) => (
-                <div key={index} className="flex items-start gap-2">
-                  {/* Event color marker */}
-                  <div className="h-2 w-2 rounded-full bg-blue-500 mt-1" />
-                  {/* Display event details */}
-                  <div>
-                    {/* Event Title */}
-                    <div className="text-sm font-medium">{event.title}</div>
-                    {/* Event Date and Time */}
-                    <div className="text-xs text-gray-500">
-                      {format(new Date(event.start), "EEEE, MMM d, yyyy 'at' p")}
-                    </div>
+        {/* Bold and more readable title */}
+        <div className="text-lg font-bold">Upcoming Events</div>
+        <div className="grid gap-4">
+          {upcomingEvents.length > 0 ? (
+            upcomingEvents.map((event, index) => (
+              <div key={index} className="flex items-start gap-2">
+                {/* Event color marker */}
+                <div className="h-2 w-2 rounded-full bg-blue-500 mt-1" />
+                {/* Display event details */}
+                <div>
+                  {/* Event Title */}
+                  <div className="text-sm font-medium">{event.title}</div>
+                  {/* Event Date and Time */}
+                  <div className="text-xs text-gray-500">
+                    {format(new Date(event.start), "EEEE, MMM d, yyyy 'at' p")}
                   </div>
                 </div>
-              ))
-            ) : (
-              <div className="text-sm text-gray-500">No upcoming events</div>
-            )}
-          </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-sm text-gray-500">No upcoming events</div>
+          )}
         </div>
       </div>
     </Card>
