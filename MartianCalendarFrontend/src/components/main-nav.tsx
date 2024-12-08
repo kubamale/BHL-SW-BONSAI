@@ -1,10 +1,11 @@
 'use client'
 
-import {cn} from "@/lib/utils";
-import {Button} from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {useEffect, useState} from "react";
+import { HTMLAttributes } from "react";
 
-interface MainNavProps extends React.HTMLAttributes<HTMLElement> {
+interface MainNavProps extends HTMLAttributes<HTMLElement> {
   currentView: string;
   setCurrentView: (view: string) => void;
   theme: {
@@ -13,7 +14,7 @@ interface MainNavProps extends React.HTMLAttributes<HTMLElement> {
     background: string;
     text: string;
   };
-  isMarsCal: boolean; // Determines if the Mars calendar is active
+  isMarsCal: boolean;
 }
 
 export function MainNav({
@@ -93,9 +94,6 @@ export function MainNav({
       className={cn("flex items-center space-x-4 lg:space-x-6", className)}
       {...props}
     >
-      <div className="text-sm font-medium" style={{ color: theme.text }}>
-        {isMarsCal ? marsTime : currentTime}
-      </div>
       {views.map((view) => (
         <Button
           key={view}
