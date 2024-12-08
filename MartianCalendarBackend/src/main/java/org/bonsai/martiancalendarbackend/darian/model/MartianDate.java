@@ -21,4 +21,8 @@ public class MartianDate {
     private int hour;
     private int minute;
     private int second;
+
+    public int getMonthNumber() {
+        return month.ordinal();
+    }
 }

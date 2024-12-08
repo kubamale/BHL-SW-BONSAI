@@ -1,6 +1,6 @@
-import { Card } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import { format, isAfter } from "date-fns";
+import {Card} from "@/components/ui/card";
+import {cn} from "@/lib/utils";
+import {format, isAfter} from "date-fns";
 
 interface Event {
   id: number;

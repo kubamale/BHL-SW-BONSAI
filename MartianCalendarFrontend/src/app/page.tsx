@@ -11,19 +11,22 @@ import {Switch} from "@/components/ui/switch"
 import {ChevronLeft, ChevronRight, Plus} from 'lucide-react'
 import {addDays, addMonths, addYears, format, subDays, subMonths, subYears} from 'date-fns'
 import Image from 'next/image'
+import OverviewMars from "@/components/overview-mars";
+import {DarianMonth} from "@/app/models/darian-months";
+import {MartianDate, MartianEvent} from "@/app/models/martian-event";
 
 const earthTheme = {
-  primary: "hsl(210, 20%, 50%)", // Soft blue-gray
-  secondary: "hsl(180, 15%, 70%)", // Light teal
-  background: "hsl(0, 0%, 98%)", // Off-white
-  text: "hsl(210, 20%, 25%)", // Dark blue-gray
+  primary: "hsl(210, 20%, 50%)",
+  secondary: "hsl(180, 15%, 70%)",
+  background: "hsl(0, 0%, 98%)",
+  text: "hsl(210, 20%, 25%)",
 }
 
 const marsTheme = {
-  primary: "hsl(15, 40%, 50%)", // Muted rust
-  secondary: "hsl(30, 30%, 60%)", // Soft orange
-  background: "hsl(15, 25%, 95%)", // Very light rust
-  text: "hsl(15, 40%, 25%)", // Dark rust
+  primary: "hsl(15, 40%, 50%)",
+  secondary: "hsl(30, 30%, 60%)",
+  background: "hsl(15, 25%, 95%)",
+  text: "hsl(15, 40%, 25%)",
 }
 
 interface Event {
@@ -41,8 +44,13 @@ export default function CalendarPage() {
   const [theme, setTheme] = useState(earthTheme)
   const [isEventModalOpen, setIsEventModalOpen] = useState(false)
   const [events, setEvents] = useState<Event[]>([])
+  const [martianEvents, setMartianEvents] = useState<MartianEvent[]>([])
+  const [marsTime, setMarsTime] = useState<MartianDate>()
 
-  // Pobranie wydarzeń z backendu przy starcie
+
+  const [currentTime, setCurrentTime] = useState("");
+  const [marsTimeString, setMarsTimeString] = useState("")
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -57,19 +65,88 @@ export default function CalendarPage() {
         console.error('Error fetching events:', error)
       }
     }
+    const fetchMartianEvents = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/events/martian')
+        if (response.ok) {
+          const data: MartianEvent[] = await response.json()
+          setMartianEvents(data)
+
+        } else {
+          console.error('Failed to fetch events')
+        }
+      } catch (error) {
+        console.error('Error fetching events:', error)
+      }
+    }
+    const nowToMartian= async () => {
+      const now = new Date();
+      const response = await fetch("http://localhost:8080/api/conversions/toMartian", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(now.toISOString()),
+      });
+      const d : MartianDate = await response.json();
+      setMarsTime(d);
+    }
+    nowToMartian();
     fetchEvents()
+    fetchMartianEvents()
   }, [])
 
   useEffect(() => {
     setTheme(isMarsCal ? marsTheme : earthTheme)
   }, [isMarsCal])
 
+  useEffect(() => {
+    const updateEarthTime = () => {
+      const now = new Date();
+      setCurrentTime(now.toLocaleString());
+    };
+
+    const updateMarsTime = async () => {
+      try {
+        const now = new Date();
+        const response = await fetch("http://localhost:8080/api/conversions/toMartian", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(now.toISOString()),
+        });
+
+        if (!response.ok) {
+          console.error("Failed to fetch Mars time, status:", response.status);
+          setMarsTimeString("Error fetching Mars time");
+          return;
+        }
+
+        const marsData = await response.json();
+        const formattedMarsTime = ` ${marsData.day} ${marsData.month} ${marsData.year}, ` +
+          `${String(marsData.hour).padStart(2, '0')}:${String(marsData.minute).padStart(2, '0')}:${String(marsData.second).padStart(2, '0')}`;
+
+        setMarsTimeString(formattedMarsTime);
+      } catch (error) {
+        console.error("Error fetching Mars time:", error);
+        setMarsTimeString("Error fetching Mars time");
+      }
+    };
+
+    // Aktualizacja natychmiastowa
+    updateEarthTime();
+    updateMarsTime();
+
+    const intervalId = setInterval(() => {
+      updateEarthTime();
+      updateMarsTime();
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   const formatCurrentState = () => {
     switch (currentView) {
       case 'day':
         return format(currentDate, 'MMMM d, yyyy')
       case 'week':
-        const weekEnd = addDays(currentDate, 6)
         return `${format(currentDate, 'MMMM yyyy')}`
       case 'month':
         return format(currentDate, 'MMMM yyyy')
@@ -117,7 +194,8 @@ export default function CalendarPage() {
       color: theme.text
     } as React.CSSProperties}>
       <div className="border-b" style={{ borderColor: theme.secondary }}>
-        <div className="flex h-16 items-center px-4">
+        <div className="flex h-16 items-center px-4 justify-between">
+          {/* Lewa część nagłówka */}
           <div className="flex items-center space-x-4">
             <Button 
               variant="outline" 
@@ -136,10 +214,23 @@ export default function CalendarPage() {
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
+
+            {/* Przyciski widoków (day/week/month/year) po lewej od switcha */}
+            <MainNav
+              className=""
+              currentView={currentView}
+              setCurrentView={setCurrentView}
+              theme={theme}
+              isMarsCal={isMarsCal}
+            />
           </div>
-          <MainNav className="mx-6" currentView={currentView} setCurrentView={setCurrentView} theme={theme} />
-          <div className="ml-auto flex items-center space-x-4">
-            <CalendarDateRangePicker theme={theme} onDateChange={handleDateChange} />
+
+          {/* Środek: Earth time, Earth, Switch, Mars, Mars time */}
+          <div className="flex items-center space-x-4">
+            <div className="text-sm font-medium" style={{ color: theme.text }}>
+              {currentTime}
+            </div>
+
             <div className="flex items-center space-x-2">
               <div className="relative w-10 h-10">
                 <Image
@@ -172,6 +263,15 @@ export default function CalendarPage() {
                 />
               </div>
             </div>
+
+            <div className="text-sm font-medium" style={{ color: theme.text }}>
+              {marsTimeString}
+            </div>
+          </div>
+
+          {/* Prawa część nagłówka */}
+          <div className="flex items-center space-x-4">
+            <CalendarDateRangePicker theme={theme} onDateChange={handleDateChange} />
           </div>
         </div>
       </div>
@@ -179,22 +279,24 @@ export default function CalendarPage() {
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">{isMarsCal ? 'Mars' : 'Earth'} Calendar</h2>
         </div>
+
         <div className="flex space-x-4">
-          <Sidebar 
-            className="hidden lg:block" 
-            isMarsCal={isMarsCal} 
+          <Sidebar
+            className="hidden lg:block"
+            isMarsCal={isMarsCal}
             currentDate={currentDate}
             setCurrentDate={setCurrentDate}
             theme={theme}
             events={events}
           />
-          <Overview 
-            currentView={currentView} 
-            isMarsCal={isMarsCal} 
-            currentDate={currentDate} 
-            theme={theme}
-            events={events}
-          />
+          {isMarsCal ? <OverviewMars year={marsTime!.year} month={Object.values(DarianMonth).at(marsTime!.monthNumber+1) as DarianMonth} currentView={currentView} events={martianEvents}/>: <Overview
+              currentView={currentView}
+              isMarsCal={isMarsCal}
+              currentDate={currentDate}
+              theme={theme}
+              events={events}
+          />}
+
         </div>
       </div>
       <EventModal 

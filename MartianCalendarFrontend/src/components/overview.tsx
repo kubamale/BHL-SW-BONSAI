@@ -8,22 +8,21 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import {
-  startOfWeek,
-  addDays,
-  format,
-  startOfMonth,
-  endOfMonth,
-  isSameMonth,
-  isSameDay,
-  parseISO,
-  isWithinInterval,
-  addHours,
-  setHours,
-  setMinutes,
-  setSeconds
+    addDays,
+    addHours,
+    endOfMonth,
+    format,
+    isSameDay,
+    isSameMonth,
+    parseISO,
+    setHours,
+    setMinutes,
+    setSeconds,
+    startOfMonth,
+    startOfWeek
 } from 'date-fns';
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import {cn} from "@/lib/utils";
+import {Button} from "@/components/ui/button";
 
 interface Event {
   id: number;
@@ -105,9 +104,9 @@ export function Overview({ currentView, isMarsCal, currentDate, theme, events: i
     }
   };
 
-  
-  
-  
+
+
+
 
   const renderEvent = (event: Event) => (
     <div 
@@ -380,7 +379,7 @@ export function Overview({ currentView, isMarsCal, currentDate, theme, events: i
             <p className="text-xs mb-2">
               End: {format(parseISO(selectedEvent.end), "PPpp")}
             </p>
-            
+
             {/* Button container with flex layout */}
             <div className="flex justify-between mt-4">
               {/* Close Button */}
