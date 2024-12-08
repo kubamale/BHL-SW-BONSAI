@@ -3,6 +3,7 @@ import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {Textarea} from "@/components/ui/textarea"
+
 import {
     Dialog,
     DialogContent,
@@ -31,14 +32,21 @@ export function EventModal({ isOpen, onClose, onSave, theme }: EventModalProps) 
   const [end, setEnd] = useState('');
   const [error, setError] = useState<string | null>(null); // Dodanie stanu dla błędów
 
+  const generateLongId = (): number => {
+    // Generate a large unique number
+    return Date.now() * 1000 + Math.floor(Math.random() * 1000); // Ensures uniqueness at a millisecond level
+  };
+
   const handleSave = async () => {
     setError(null); // Resetowanie ewentualnego poprzedniego błędu
     
     // Konwersja start i end na obiekty Date i następnie do formatu ISO 8601 z oznaczeniem strefy czasu
+    const id = generateLongId();
     const startDate = new Date(start);
     const endDate = new Date(end);
   
     const eventData = { 
+      id: id,
       title, 
       description, 
       start: startDate.toISOString(), 

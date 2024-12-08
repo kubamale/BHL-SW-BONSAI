@@ -27,6 +27,8 @@ export function Sidebar({ className, currentDate, theme, events }: SidebarProps)
     .filter((event) => isAfter(new Date(event.start), currentDate)) // Only events after the current date
     .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime()) // Sort by start date
     .slice(0, 5); // Limit to 5 events
+    console.log('check:', upcomingEvents); // Debugging: Check the selected event
+
 
   return (
     <Card
